@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Barlow_Condensed, DM_Serif_Display, DM_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/toaster'
+import { PostHogProvider } from './providers'
 import './globals.css'
 
 const barlowCondensed = Barlow_Condensed({ 
@@ -50,9 +51,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${barlowCondensed.variable} ${dmSerifDisplay.variable} ${dmSans.variable} font-sans antialiased`}>
-        {children}
-        <Toaster />
-        <Analytics />
+        <PostHogProvider>
+          {children}
+          <Toaster />
+          <Analytics />
+        </PostHogProvider>
       </body>
     </html>
   )

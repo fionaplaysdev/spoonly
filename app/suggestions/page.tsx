@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -220,6 +220,32 @@ function SuggestionsContent() {
   )
 }
 
+/** Static shell shown during prerender / until searchParams and client state are ready. */
+function SuggestionsFallback() {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-lg mx-auto px-4 py-6 pb-24 space-y-8">
+        <div className="flex items-start gap-4">
+          <Link href="/" className="mt-2">
+            <ArrowLeft className="w-6 h-6 text-foreground" strokeWidth={2.5} />
+          </Link>
+          <h1 className="font-display text-4xl font-black uppercase leading-none tracking-tight text-foreground">
+            Quick<br />
+            cook inspo
+          </h1>
+        </div>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Loading…</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function SuggestionsPage() {
-  return <SuggestionsContent />
+  return (
+    <Suspense fallback={<SuggestionsFallback />}>
+      <SuggestionsContent />
+    </Suspense>
+  )
 }
