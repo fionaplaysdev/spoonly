@@ -55,14 +55,35 @@ export interface SuggestedReplacement {
 export interface TemplateMatchDetail {
   template: MealTemplate
   matchedIngredientIds: string[]
+  /**
+   * Template ingredient ids that are not present directly and not satisfied via
+   * an approved substitution. These are the ingredients the user truly lacks.
+   */
   missingIngredientIds: string[]
+  /**
+   * Roles that have at least one satisfying ingredient (directly or via substitution).
+   */
   matchedRoles: IngredientRole[]
+  /**
+   * Roles that are required by the template but not satisfied by any available
+   * ingredient or approved substitute.
+   */
   missingRequiredRoles: IngredientRole[]
   selectedMatchIds: string[]
   pantryMatchIds: string[]
   missingCoreIngredientIds: string[]
   missingOptionalIngredientIds: string[]
+  /**
+   * Anchor ingredients that are neither present nor satisfied by an approved
+   * substitute. If this is non-empty, the suggestion is considered invalid.
+   */
   missingAnchorIngredientIds: string[]
+  /**
+   * High-level classification of suggestion quality:
+   * - 'make-now': all required roles and anchors satisfied, nothing missing
+   * - 'almost-there': all required roles and anchors satisfied, some non-core missing
+   * - 'invalid': required role or anchor missing – suggestion is filtered out
+   */
   confidenceTier: 'make-now' | 'almost-there' | 'invalid'
   suggestedReplacements: SuggestedReplacement[]
 }

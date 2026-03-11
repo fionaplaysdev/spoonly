@@ -2,18 +2,8 @@
 
 import { useState } from 'react'
 import { MealCard } from './meal-card'
-import type { Meal } from '@/lib/types'
 import { Zap, Flame } from 'lucide-react'
-
-type MealWithAvailability = Meal & {
-  availableIngredientIds?: string[]
-  missingIngredientIds?: string[]
-  confidenceTier?: 'make-now' | 'almost-there' | 'invalid'
-  substitutionMatches?: {
-    requiredIngredientId: string
-    substituteIngredientId: string
-  }[]
-}
+import type { MealWithAvailability } from '@/lib/ui/types'
 
 interface EnergySectionProps {
   level: 'barely-functioning' | 'low-effort' | 'some-energy'
@@ -42,7 +32,6 @@ const levelConfig = {
 export function EnergySection({ level, meals, selectedIngredients }: EnergySectionProps) {
   const [expanded, setExpanded] = useState(false)
   const config = levelConfig[level]
-  const Icon = config.icon
 
   if (meals.length === 0) return null
 

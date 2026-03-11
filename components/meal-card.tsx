@@ -1,23 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import type { Meal } from '@/lib/types'
 import { getIngredientName } from '@/lib/domain/ingredients'
 import { SpoonIcon } from './spoon-icon'
-
-type MealWithAvailability = Meal & {
-  availableIngredientIds?: string[]
-  missingIngredientIds?: string[]
-  confidenceTier?: 'make-now' | 'almost-there' | 'invalid'
-  substitutionMatches?: {
-    requiredIngredientId: string
-    substituteIngredientId: string
-  }[]
-  displayIngredientLines?: {
-    ids: string[]
-    role?: string
-  }[]
-}
+import { STATUS_TAG_CLASSES, INGREDIENT_ICON_CLASSES } from '@/lib/ui/tokens'
+import type { MealWithAvailability } from '@/lib/ui/types'
+import { SectionLabel } from './ui/section-label'
 
 interface MealCardProps {
   meal: MealWithAvailability
@@ -67,12 +55,12 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
               {meal.time}
             </span>
             {meal.confidenceTier === 'make-now' && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-foreground bg-energy-some text-[10px] font-bold uppercase tracking-wider text-foreground">
+              <span className={STATUS_TAG_CLASSES['make-now']}>
                 Make now
               </span>
             )}
             {meal.confidenceTier === 'almost-there' && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-border bg-[color:var(--highlight-yellow)] text-[10px] font-bold uppercase tracking-wider text-foreground">
+              <span className={STATUS_TAG_CLASSES['almost-there']}>
                 Almost there
               </span>
             )}
@@ -85,9 +73,7 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
         <div className="border-t-3 border-foreground p-4 space-y-4">
           {/* Ingredients */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-              Ingredients
-            </h4>
+            <SectionLabel>Ingredients</SectionLabel>
             <ul className="space-y-1">
               {(meal.displayIngredientLines ??
                 meal.ingredients.map((id) => ({ ids: [id] }))).map(
@@ -104,10 +90,10 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
                       : '○'
 
                   const iconClasses = hasDirect
-                    ? 'border-foreground bg-foreground text-card'
+                    ? INGREDIENT_ICON_CLASSES.available
                     : substituteIdForLine
-                      ? 'border-foreground text-foreground'
-                      : 'border-muted-foreground text-muted-foreground'
+                      ? INGREDIENT_ICON_CLASSES.substitute
+                      : INGREDIENT_ICON_CLASSES.missing
 
                   const names = ids.map((id) => getIngredientName(id))
                   const label =
@@ -170,9 +156,7 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
 
           {/* Instructions */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-              Instructions
-            </h4>
+            <SectionLabel>Instructions</SectionLabel>
             <ol className="space-y-2">
               {meal.instructions.map((step, index) => (
                 <li key={index} className="text-sm text-foreground flex gap-3">

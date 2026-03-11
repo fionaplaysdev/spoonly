@@ -3,11 +3,8 @@
 import { PANTRY_SECTIONS } from '@/lib/domain/ingredients'
 import { PantrySection } from './pantry-section'
 import { KitchenTips } from './kitchen-tips'
-import { useStock } from '@/lib/stock-context'
 
 export function StockTab() {
-  const { inStock } = useStock()
-
   return (
     <div className="space-y-8">
       <div>
