@@ -52,6 +52,8 @@ export interface TemplateMatchDetail {
   missingIngredientIds: string[]
   matchedRoles: IngredientRole[]
   missingRequiredRoles: IngredientRole[]
+  selectedMatchIds: string[]
+  pantryMatchIds: string[]
 }
 
 export interface ScoredSuggestion {

@@ -9,6 +9,12 @@ import type {
 
 import { MEAL_TEMPLATES } from './meals'
 
+// Weighting constants to keep scoring deterministic and readable
+const SELECTED_MATCH_WEIGHT = 10
+const PANTRY_MATCH_WEIGHT = 4
+const ROLE_MATCH_WEIGHT = 1
+const MISSING_INGREDIENT_PENALTY = 3
+
 export function getAvailableIngredients(
   pantryIds: string[],
   selectedIds: string[],
@@ -19,22 +25,38 @@ export function getAvailableIngredients(
 
 export function matchTemplateToIngredients(
   template: MealTemplate,
-  availableIds: string[],
+  pantryIds: string[],
+  selectedIds: string[],
   allIngredients: Ingredient[],
 ): TemplateMatchDetail {
-  const availableSet = new Set(availableIds)
+  const selectedSet = new Set(selectedIds)
+  const pantrySet = new Set(pantryIds)
+  const availableSet = new Set<string>([
+    ...Array.from(selectedSet),
+    ...Array.from(pantrySet),
+  ])
 
   const allTemplateIngredientIds = Object.values(template.ingredientsByRole)
     .filter((ids): ids is string[] => Array.isArray(ids))
     .flat()
 
-  const matchedIngredientIds = allTemplateIngredientIds.filter((id) =>
-    availableSet.has(id),
-  )
+  const selectedMatchIds: string[] = []
+  const pantryMatchIds: string[] = []
+  const matchedIngredientIds: string[] = []
+  const missingIngredientIds: string[] = []
 
-  const missingIngredientIds = allTemplateIngredientIds.filter(
-    (id) => !availableSet.has(id),
-  )
+  for (const id of allTemplateIngredientIds) {
+    if (availableSet.has(id)) {
+      matchedIngredientIds.push(id)
+      if (selectedSet.has(id)) {
+        selectedMatchIds.push(id)
+      } else if (pantrySet.has(id)) {
+        pantryMatchIds.push(id)
+      }
+    } else {
+      missingIngredientIds.push(id)
+    }
+  }
 
   const matchedRoles = new Set<IngredientRole>()
   const missingRequiredRoles = new Set<IngredientRole>()
@@ -64,6 +86,8 @@ export function matchTemplateToIngredients(
     missingIngredientIds,
     matchedRoles: Array.from(matchedRoles),
     missingRequiredRoles: Array.from(missingRequiredRoles),
+    selectedMatchIds,
+    pantryMatchIds,
   }
 }
 
@@ -72,10 +96,17 @@ export function scoreMatch(detail: TemplateMatchDetail): number {
     return Number.NEGATIVE_INFINITY
   }
 
-  const matchedCount = detail.matchedIngredientIds.length
+  const selectedCount = detail.selectedMatchIds.length
+  const pantryCount = detail.pantryMatchIds.length
+  const roleCount = detail.matchedRoles.length
   const missingCount = detail.missingIngredientIds.length
 
-  return matchedCount * 10 - missingCount * 2
+  return (
+    selectedCount * SELECTED_MATCH_WEIGHT +
+    pantryCount * PANTRY_MATCH_WEIGHT +
+    roleCount * ROLE_MATCH_WEIGHT -
+    missingCount * MISSING_INGREDIENT_PENALTY
+  )
 }
 
 const ENERGY_LEVEL_ORDER: EnergyLevel[] = [
@@ -116,7 +147,8 @@ export function getSuggestionsForIngredients({
 
     const detail = matchTemplateToIngredients(
       template,
-      availableIds,
+      pantryIds,
+      selectedIds,
       allIngredients,
     )
 
@@ -127,7 +159,25 @@ export function getSuggestionsForIngredients({
   }
 
   suggestions.sort((a, b) => {
+    // 1. Prefer templates that use more selected ingredients
+    const aSelected = a.detail.selectedMatchIds.length
+    const bSelected = b.detail.selectedMatchIds.length
+    if (aSelected !== bSelected) return bSelected - aSelected
+
+    // 2. Then prefer templates that use more pantry-only ingredients
+    const aPantry = a.detail.pantryMatchIds.length
+    const bPantry = b.detail.pantryMatchIds.length
+    if (aPantry !== bPantry) return bPantry - aPantry
+
+    // 3. Then prefer fewer missing ingredients
+    const aMissing = a.detail.missingIngredientIds.length
+    const bMissing = b.detail.missingIngredientIds.length
+    if (aMissing !== bMissing) return aMissing - bMissing
+
+    // 4. Fall back to overall score (includes role matches)
     if (b.score !== a.score) return b.score - a.score
+
+    // 5. Finally, prefer lower-energy suggestions first
     return compareEnergyLevels(a.template.energyLevel, b.template.energyLevel)
   })
 

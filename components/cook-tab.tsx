@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStock } from '@/lib/stock-context'
-import { allIngredients } from '@/lib/data'
+import { INGREDIENTS } from '@/lib/domain/ingredients'
 import { toast } from '@/hooks/use-toast'
 import { ChevronDown, ChevronUp, X, ArrowRight } from 'lucide-react'
 
@@ -29,12 +29,12 @@ export function CookTab() {
 
   // Get ingredients that are in stock
   const stockedIngredients = useMemo(() => {
-    return allIngredients.filter((ing) => isInStock(ing.id))
+    return INGREDIENTS.filter((ing) => isInStock(ing.id))
   }, [isInStock])
 
   // Get ingredients that are NOT in stock and NOT already selected
   const availableIngredients = useMemo(() => {
-    return allIngredients.filter((ing) => !isInStock(ing.id) && !selectedIngredients.has(ing.id))
+    return INGREDIENTS.filter((ing) => !isInStock(ing.id) && !selectedIngredients.has(ing.id))
   }, [isInStock, selectedIngredients])
 
   // Filter available ingredients by search
@@ -46,7 +46,7 @@ export function CookTab() {
   }, [availableIngredients, searchQuery])
 
   const addIngredient = (id: string) => {
-    const ingredient = allIngredients.find((ing) => ing.id === id)
+    const ingredient = INGREDIENTS.find((ing) => ing.id === id)
     setSelectedIngredients((prev) => new Set(prev).add(id))
     setSearchQuery('')
     
@@ -68,7 +68,7 @@ export function CookTab() {
 
   // Get selected ingredient objects for display
   const selectedIngredientObjects = useMemo(() => {
-    return allIngredients.filter((ing) => selectedIngredients.has(ing.id))
+    return INGREDIENTS.filter((ing) => selectedIngredients.has(ing.id))
   }, [selectedIngredients])
 
   // Total selected = stocked + manually selected

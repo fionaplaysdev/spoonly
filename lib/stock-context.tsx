@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 
+import { normalizeLegacyIngredientId } from './domain/ingredients'
+
 interface StockContextType {
   inStock: Set<string>
   toggleStock: (ingredientId: string) => void
@@ -22,7 +24,11 @@ export function StockProvider({ children }: { children: ReactNode }) {
     if (stored) {
       try {
         const parsed = JSON.parse(stored)
-        setInStock(new Set(parsed))
+        const ids: string[] = Array.isArray(parsed) ? parsed : []
+        const normalized = ids
+          .map((id) => normalizeLegacyIngredientId(id))
+          .filter((id): id is string => !!id)
+        setInStock(new Set(normalized))
       } catch {
         // Invalid data, start fresh
       }

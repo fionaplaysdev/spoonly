@@ -412,3 +412,29 @@ export function getCoreIngredients(): Ingredient[] {
   return INGREDIENTS.filter((ingredient) => ingredient.priority === 'core')
 }
 
+// Map legacy ids from the original pantry model to the new domain ids.
+export function normalizeLegacyIngredientId(id: string): string | null {
+  switch (id) {
+    case 'canned-beans':
+      return 'beans'
+    case 'canned-lentils':
+      return 'lentils'
+    case 'frozen-peas':
+      return 'peas'
+    case 'frozen-spinach':
+      return 'spinach'
+    case 'frozen-green-beans':
+      return 'green-beans'
+    case 'frozen-broccoli':
+      return 'broccoli'
+    case 'frozen-edamame':
+      return 'edamame'
+    case 'cheese':
+      return 'cheddar-cheese'
+    case 'noodles':
+      return 'noodle-pouches'
+    default:
+      return id
+  }
+}
+

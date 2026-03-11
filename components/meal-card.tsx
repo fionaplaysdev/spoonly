@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { Meal } from '@/lib/types'
-import { allIngredients } from '@/lib/data'
+import { getIngredientName } from '@/lib/domain/ingredients'
 import { SpoonIcon } from './spoon-icon'
 
 interface MealCardProps {
@@ -19,10 +19,6 @@ const levelConfig = {
 
 export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort' }: MealCardProps) {
   const [expanded, setExpanded] = useState(false)
-  
-  const getIngredientName = (id: string) => {
-    return allIngredients.find((i) => i.id === id)?.name || id
-  }
 
   const config = levelConfig[energyLevel]
 

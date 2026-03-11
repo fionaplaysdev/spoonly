@@ -1,6 +1,6 @@
 'use client'
 
-import { pantryCategories } from '@/lib/data'
+import { PANTRY_SECTIONS } from '@/lib/domain/ingredients'
 import { PantrySection } from './pantry-section'
 import { KitchenTips } from './kitchen-tips'
 import { useStock } from '@/lib/stock-context'
@@ -20,8 +20,8 @@ export function StockTab() {
       </div>
 
       <div className="space-y-8">
-        {pantryCategories.map((category) => (
-          <PantrySection key={category.id} category={category} />
+        {PANTRY_SECTIONS.map((section) => (
+          <PantrySection key={section.id} section={section} />
         ))}
       </div>
 
