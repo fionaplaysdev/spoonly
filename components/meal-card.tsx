@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePostHog } from 'posthog-js/react'
 import { getIngredientName } from '@/lib/domain/ingredients'
 import { SpoonIcon } from './spoon-icon'
 import { STATUS_TAG_CLASSES, INGREDIENT_ICON_CLASSES, INGREDIENT_ROW_CLASSES } from '@/lib/ui/tokens'
@@ -21,6 +22,7 @@ const levelConfig = {
 
 export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort' }: MealCardProps) {
   const [expanded, setExpanded] = useState(false)
+  const posthog = usePostHog()
 
   const config = levelConfig[energyLevel]
   const availableSet = new Set(meal.availableIngredientIds ?? [])
@@ -31,10 +33,24 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
     ]),
   )
 
+  const handleToggleExpand = () => {
+    if (!expanded) {
+      posthog.capture('meal_card_expanded', {
+        meal_id: meal.id,
+        meal_name: meal.name,
+        energy_level: energyLevel,
+        confidence_tier: meal.confidenceTier,
+        missing_ingredients: meal.missingIngredientIds?.length ?? 0,
+        has_substitutions: (meal.substitutionMatches?.length ?? 0) > 0,
+      })
+    }
+    setExpanded(!expanded)
+  }
+
   return (
-    <div 
+    <div
       className="bg-card border-3 border-foreground overflow-hidden cursor-pointer"
-      onClick={() => setExpanded(!expanded)}
+      onClick={handleToggleExpand}
     >
       {/* Header row - always visible */}
       <div className="flex">

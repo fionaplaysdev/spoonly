@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePostHog } from 'posthog-js/react'
 import { MealCard } from './meal-card'
 import { Zap, Flame } from 'lucide-react'
 import type { MealWithAvailability } from '@/lib/ui/types'
@@ -31,6 +32,7 @@ const levelConfig = {
 
 export function EnergySection({ level, meals, selectedIngredients }: EnergySectionProps) {
   const [expanded, setExpanded] = useState(false)
+  const posthog = usePostHog()
   const config = levelConfig[level]
 
   if (meals.length === 0) return null
@@ -39,13 +41,23 @@ export function EnergySection({ level, meals, selectedIngredients }: EnergySecti
   const remainingMeals = meals.slice(1)
   const hasMore = remainingMeals.length > 0
 
+  const handleToggleExpand = () => {
+    if (!expanded) {
+      posthog.capture('more_meals_expanded', {
+        energy_level: level,
+        additional_meals_count: remainingMeals.length,
+      })
+    }
+    setExpanded(!expanded)
+  }
+
   return (
     <div className="space-y-3">
       {/* Energy level pill */}
       <div className="inline-block bg-primary text-primary-foreground px-4 py-2 text-xs font-bold uppercase tracking-wider">
         {config.title}
       </div>
-      
+
       {/* Top meal card */}
       <MealCard
         meal={topMeal}
@@ -69,7 +81,7 @@ export function EnergySection({ level, meals, selectedIngredients }: EnergySecti
             </div>
           )}
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={handleToggleExpand}
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             {expanded ? 'Show less' : `+${remainingMeals.length} more`}

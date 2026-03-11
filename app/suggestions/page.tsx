@@ -1,7 +1,8 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { usePostHog } from 'posthog-js/react'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
@@ -81,6 +82,8 @@ function toDisplayMeal(suggestion: ScoredSuggestion): DisplayMeal {
 function SuggestionsContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const posthog = usePostHog()
+  const viewTracked = useRef(false)
 
   const [pantryIds, setPantryIds] = useState<string[]>([])
 
@@ -168,6 +171,22 @@ function SuggestionsContent() {
     (groupedDisplayMeals['barely-functioning'].length > 0 ||
       groupedDisplayMeals['low-effort'].length > 0 ||
       groupedDisplayMeals['some-energy'].length > 0)
+
+  useEffect(() => {
+    if (viewTracked.current) return
+    if (domainSelectedIds.length === 0 && domainPantryIds.length === 0) return
+    viewTracked.current = true
+    posthog.capture('suggestions_viewed', {
+      total_suggestions: suggestions.length,
+      has_results: hasResults,
+      ingredient_count: domainSelectedIds.length + domainPantryIds.length,
+      pantry_ingredients: domainPantryIds.length,
+      selected_ingredients: domainSelectedIds.length,
+      barely_functioning_count: groupedDisplayMeals['barely-functioning'].length,
+      low_effort_count: groupedDisplayMeals['low-effort'].length,
+      some_energy_count: groupedDisplayMeals['some-energy'].length,
+    })
+  }, [suggestions, hasResults, domainSelectedIds, domainPantryIds, groupedDisplayMeals, posthog])
 
   return (
     <div className="min-h-screen bg-background">

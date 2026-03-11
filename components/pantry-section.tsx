@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Lightbulb } from 'lucide-react'
+import { usePostHog } from 'posthog-js/react'
 import { useStock } from '@/lib/stock-context'
 import { cn } from '@/lib/utils'
 import type { PantrySectionMeta } from '@/lib/domain/ingredients'
@@ -15,6 +16,7 @@ interface PantrySectionProps {
 
 export function PantrySection({ section }: PantrySectionProps) {
   const { isInStock, toggleStock } = useStock()
+  const posthog = usePostHog()
 
   const [expanded, setExpanded] = useState(true)
 
@@ -154,10 +156,16 @@ export function PantrySection({ section }: PantrySectionProps) {
 
 
   const handleClearSection = () => {
+    const clearedCount = ingredients.filter((ing) => isInStock(ing.id)).length
     ingredients.forEach((ingredient) => {
       if (isInStock(ingredient.id)) {
         toggleStock(ingredient.id)
       }
+    })
+    posthog.capture('pantry_section_cleared', {
+      section_id: section.id,
+      section_name: section.name,
+      ingredients_cleared: clearedCount,
     })
   }
 
@@ -245,6 +253,13 @@ export function PantrySection({ section }: PantrySectionProps) {
                   onClick={() => {
                     const wasInStock = isInStock(ingredient.id)
                     toggleStock(ingredient.id)
+                    posthog.capture('stock_ingredient_toggled', {
+                      ingredient_id: ingredient.id,
+                      ingredient_name: ingredient.name,
+                      section_id: section.id,
+                      section_name: section.name,
+                      action: wasInStock ? 'removed' : 'added',
+                    })
                     if (!wasInStock) {
                       showStockToast(ingredient.id)
                     }

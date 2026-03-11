@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { usePostHog } from 'posthog-js/react'
 import { useStock } from '@/lib/stock-context'
 import { INGREDIENTS } from '@/lib/domain/ingredients'
 import { toast } from '@/hooks/use-toast'
@@ -9,6 +10,7 @@ import { ChevronDown, ChevronUp, X, ArrowRight } from 'lucide-react'
 
 export function CookTab() {
   const router = useRouter()
+  const posthog = usePostHog()
   const { inStock, isInStock, toggleStock } = useStock()
   const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
@@ -49,20 +51,30 @@ export function CookTab() {
     const ingredient = INGREDIENTS.find((ing) => ing.id === id)
     setSelectedIngredients((prev) => new Set(prev).add(id))
     setSearchQuery('')
-    
+
     if (ingredient) {
       toast({
         description: `Added ${ingredient.name}`,
         duration: 1500,
       })
+      posthog.capture('ingredient_added', {
+        ingredient_id: id,
+        ingredient_name: ingredient.name,
+        source: 'search',
+      })
     }
   }
 
   const removeIngredient = (id: string) => {
+    const ingredient = INGREDIENTS.find((ing) => ing.id === id)
     setSelectedIngredients((prev) => {
       const next = new Set(prev)
       next.delete(id)
       return next
+    })
+    posthog.capture('ingredient_removed', {
+      ingredient_id: id,
+      ingredient_name: ingredient?.name,
     })
   }
 
@@ -77,6 +89,11 @@ export function CookTab() {
 
   const handleFindMeals = () => {
     const ingredientIds = allSelected.join(',')
+    posthog.capture('find_meals_clicked', {
+      total_ingredients: allSelected.length,
+      stocked_ingredients: inStock.size,
+      selected_ingredients: selectedIngredients.size,
+    })
     router.push(`/suggestions?ingredients=${encodeURIComponent(ingredientIds)}`)
   }
 
