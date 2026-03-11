@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { getIngredientName } from '@/lib/domain/ingredients'
 import { SpoonIcon } from './spoon-icon'
-import { STATUS_TAG_CLASSES, INGREDIENT_ICON_CLASSES } from '@/lib/ui/tokens'
+import { STATUS_TAG_CLASSES, INGREDIENT_ICON_CLASSES, INGREDIENT_ROW_CLASSES } from '@/lib/ui/tokens'
 import type { MealWithAvailability } from '@/lib/ui/types'
 import { SectionLabel } from './ui/section-label'
 
@@ -83,17 +83,27 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
                   const substituteIdForLine =
                     ids.length === 1 ? substitutionMap.get(ids[0]) : undefined
 
-                  const iconChar = hasDirect
-                    ? '✓'
+                  const state = hasDirect
+                    ? 'exact'
                     : substituteIdForLine
-                      ? '↺'
-                      : '○'
+                      ? 'substituted'
+                      : 'missing'
 
-                  const iconClasses = hasDirect
-                    ? INGREDIENT_ICON_CLASSES.available
-                    : substituteIdForLine
-                      ? INGREDIENT_ICON_CLASSES.substitute
-                      : INGREDIENT_ICON_CLASSES.missing
+                  const iconChar =
+                    state === 'exact'
+                      ? '✓'
+                      : state === 'substituted'
+                        ? '↺'
+                        : '○'
+
+                  const iconClasses =
+                    state === 'exact'
+                      ? INGREDIENT_ICON_CLASSES.available
+                      : state === 'substituted'
+                        ? INGREDIENT_ICON_CLASSES.substitute
+                        : INGREDIENT_ICON_CLASSES.missing
+
+                  const rowClasses = INGREDIENT_ROW_CLASSES[state]
 
                   const names = ids.map((id) => getIngredientName(id))
                   const label =
@@ -105,24 +115,22 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
                             names[names.length - 1]
                           }`
 
+                  const displayText =
+                    state === 'substituted' && substituteIdForLine
+                      ? `${label} — using ${getIngredientName(substituteIdForLine)}`
+                      : label
+
                   return (
                     <li
                       key={`${label}-${index}`}
-                      className="flex items-center gap-2 text-sm text-foreground"
+                      className={`flex items-center gap-2 rounded px-2 py-0.5 text-sm ${rowClasses}`}
                     >
                       <span
-                        className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[10px] ${iconClasses}`}
+                        className={`inline-flex shrink-0 items-center justify-center w-4 h-4 rounded-full border text-[10px] ${iconClasses}`}
                       >
                         {iconChar}
                       </span>
-                      <div className="flex flex-col">
-                        <span>{label}</span>
-                        {substituteIdForLine && (
-                          <span className="text-[11px] text-muted-foreground">
-                            using {getIngredientName(substituteIdForLine)}
-                          </span>
-                        )}
-                      </div>
+                      <span className="min-w-0">{displayText}</span>
                     </li>
                   )
                 },

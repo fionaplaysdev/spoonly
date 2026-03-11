@@ -11,3 +11,10 @@ export const INGREDIENT_ICON_CLASSES = {
   missing: 'border-muted-foreground text-muted-foreground',
 } as const
 
+/** Row styling for ingredient list rows (exact / substituted / missing) */
+export const INGREDIENT_ROW_CLASSES = {
+  exact: 'text-foreground',
+  substituted: 'bg-[color:var(--highlight-yellow)] text-foreground',
+  missing: 'text-muted-foreground',
+} as const
+

@@ -9,7 +9,7 @@ import type {
 } from './types'
 
 import { MEAL_TEMPLATES } from './meals'
-import { SUBSTITUTIONS } from './substitutions'
+import { getSubstitutions } from './substitutions'
 
 // Weighting constants to keep scoring deterministic and readable
 const SELECTED_MATCH_WEIGHT = 10
@@ -52,7 +52,7 @@ export function matchTemplateToIngredients(
   const suggestedReplacements: SuggestedReplacement[] = []
 
   for (const id of allTemplateIngredientIds) {
-    const substitutions = SUBSTITUTIONS[id] ?? []
+    const substitutions = getSubstitutions(id)
     const hasDirect = availableSet.has(id)
     const replacementIds = substitutions.filter((subId) => availableSet.has(subId))
     const hasSubstitute = replacementIds.length > 0
@@ -82,7 +82,7 @@ export function matchTemplateToIngredients(
   const anchorIds = template.anchorIngredientIds ?? []
   const missingAnchorIngredientIds: string[] = []
   for (const anchorId of anchorIds) {
-    const substitutions = SUBSTITUTIONS[anchorId] ?? []
+    const substitutions = getSubstitutions(anchorId)
     const hasDirect = availableSet.has(anchorId)
     const hasSubstitute = substitutions.some((subId) => availableSet.has(subId))
     if (!hasDirect && !hasSubstitute) {
@@ -98,7 +98,7 @@ export function matchTemplateToIngredients(
     let availableForRole = 0
 
     for (const id of templateRoleIds) {
-      const substitutions = SUBSTITUTIONS[id] ?? []
+      const substitutions = getSubstitutions(id)
       const hasDirect = availableSet.has(id)
       const hasSubstitute = substitutions.some((subId) => availableSet.has(subId))
       if (hasDirect || hasSubstitute) {
@@ -108,10 +108,10 @@ export function matchTemplateToIngredients(
 
     if (
       requirement.required &&
-      availableForRole.length < (requirement.min ?? 1)
+      availableForRole < (requirement.min ?? 1)
     ) {
       missingRequiredRoles.add(requirement.role)
-    } else if (availableForRole.length > 0) {
+    } else if (availableForRole > 0) {
       matchedRoles.add(requirement.role)
     }
   }

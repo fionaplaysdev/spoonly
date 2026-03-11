@@ -77,6 +77,20 @@ export const INGREDIENTS: Ingredient[] = [
     roles: ['flavour'],
   },
   {
+    id: 'tomato-paste',
+    name: 'Tomato Paste',
+    section: 'flavour-engine',
+    priority: 'core',
+    roles: ['flavour'],
+  },
+  {
+    id: 'hot-sauce',
+    name: 'Hot Sauce',
+    section: 'flavour-engine',
+    priority: 'nice-to-have',
+    roles: ['flavour'],
+  },
+  {
     id: 'curry-paste',
     name: 'Curry Paste',
     section: 'flavour-engine',
@@ -157,6 +171,13 @@ export const INGREDIENTS: Ingredient[] = [
     priority: 'nice-to-have',
     roles: ['protein'],
   },
+  {
+    id: 'butter-beans',
+    name: 'Butter Beans',
+    section: 'protein',
+    priority: 'nice-to-have',
+    roles: ['protein'],
+  },
 
   // Fast carbs – core
   {
@@ -197,6 +218,14 @@ export const INGREDIENTS: Ingredient[] = [
   {
     id: 'potatoes',
     name: 'Potatoes',
+    section: 'fast-carb',
+    priority: 'core',
+    roles: ['carb'],
+  },
+
+  {
+    id: 'tortillas',
+    name: 'Tortillas',
     section: 'fast-carb',
     priority: 'core',
     roles: ['carb'],
@@ -257,6 +286,20 @@ export const INGREDIENTS: Ingredient[] = [
     roles: ['veg'],
   },
   {
+    id: 'kimchi',
+    name: 'Kimchi',
+    section: 'veg',
+    priority: 'nice-to-have',
+    roles: ['veg'],
+  },
+  {
+    id: 'cherry-tomatoes',
+    name: 'Cherry Tomatoes',
+    section: 'veg',
+    priority: 'nice-to-have',
+    roles: ['veg'],
+  },
+  {
     id: 'carrot',
     name: 'Carrot',
     section: 'veg',
@@ -289,6 +332,20 @@ export const INGREDIENTS: Ingredient[] = [
   {
     id: 'sesame-oil',
     name: 'Sesame Oil',
+    section: 'finisher',
+    priority: 'core',
+    roles: ['finisher'],
+  },
+  {
+    id: 'butter',
+    name: 'Butter',
+    section: 'finisher',
+    priority: 'core',
+    roles: ['finisher'],
+  },
+  {
+    id: 'olive-oil',
+    name: 'Olive Oil',
     section: 'finisher',
     priority: 'core',
     roles: ['finisher'],
@@ -340,6 +397,20 @@ export const INGREDIENTS: Ingredient[] = [
   {
     id: 'feta',
     name: 'Feta',
+    section: 'finisher',
+    priority: 'nice-to-have',
+    roles: ['finisher'],
+  },
+  {
+    id: 'black-pepper',
+    name: 'Black Pepper',
+    section: 'finisher',
+    priority: 'nice-to-have',
+    roles: ['finisher'],
+  },
+  {
+    id: 'chilli-flakes',
+    name: 'Chilli Flakes',
     section: 'finisher',
     priority: 'nice-to-have',
     roles: ['finisher'],
