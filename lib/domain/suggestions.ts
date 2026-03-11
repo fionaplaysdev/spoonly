@@ -79,6 +79,17 @@ export function matchTemplateToIngredients(
     finisherSet.has(id),
   )
 
+  const anchorIds = template.anchorIngredientIds ?? []
+  const missingAnchorIngredientIds: string[] = []
+  for (const anchorId of anchorIds) {
+    const substitutions = SUBSTITUTIONS[anchorId] ?? []
+    const hasDirect = availableSet.has(anchorId)
+    const hasSubstitute = substitutions.some((subId) => availableSet.has(subId))
+    if (!hasDirect && !hasSubstitute) {
+      missingAnchorIngredientIds.push(anchorId)
+    }
+  }
+
   const matchedRoles = new Set<IngredientRole>()
   const missingRequiredRoles = new Set<IngredientRole>()
 
@@ -105,12 +116,12 @@ export function matchTemplateToIngredients(
     }
   }
 
-  // Classify confidence based purely on required roles:
-  // - invalid: any required role is missing
-  // - make-now: all required roles satisfied and no ingredients missing
-  // - almost-there: all required roles satisfied but some (optional) ingredients missing
+  // Classify confidence based on required roles and anchors:
+  // - invalid: any required role missing OR any anchor missing without substitute
+  // - make-now: all required roles and anchors satisfied and no ingredients missing
+  // - almost-there: all required roles and anchors satisfied but some (optional) ingredients missing
   let confidenceTier: 'make-now' | 'almost-there' | 'invalid'
-  if (missingRequiredRoles.size > 0) {
+  if (missingRequiredRoles.size > 0 || missingAnchorIngredientIds.length > 0) {
     confidenceTier = 'invalid'
   } else if (missingIngredientIds.length === 0) {
     confidenceTier = 'make-now'
@@ -128,6 +139,7 @@ export function matchTemplateToIngredients(
     pantryMatchIds,
     missingCoreIngredientIds,
     missingOptionalIngredientIds,
+    missingAnchorIngredientIds,
     confidenceTier,
     suggestedReplacements,
   }

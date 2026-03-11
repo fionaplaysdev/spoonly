@@ -15,7 +15,7 @@ import {
   getSuggestionsForIngredients,
   groupSuggestionsByEnergy,
 } from '@/lib/domain/suggestions'
-import type { EnergyLevel, ScoredSuggestion } from '@/lib/domain/types'
+import type { EnergyLevel, ScoredSuggestion, IngredientRole } from '@/lib/domain/types'
 
 type DisplayMeal = {
   id: string
@@ -33,6 +33,10 @@ type DisplayMeal = {
   substitutionMatches?: {
     requiredIngredientId: string
     substituteIngredientId: string
+  }[]
+  displayIngredientLines?: {
+    ids: string[]
+    role?: IngredientRole
   }[]
 }
 
@@ -55,6 +59,24 @@ function toDisplayMeal(suggestion: ScoredSuggestion): DisplayMeal {
         : [],
     ) ?? []
 
+  const displayIngredientLines: { ids: string[]; role?: IngredientRole }[] = []
+
+  const order: IngredientRole[] = ['carb', 'protein', 'veg', 'flavour', 'finisher']
+  for (const role of order) {
+    const idsForRole = template.ingredientsByRole[role]
+    if (!idsForRole || idsForRole.length === 0) continue
+
+    if (role === 'carb' && idsForRole.length > 1) {
+      // Group alternative carbs onto a single line
+      displayIngredientLines.push({ ids: idsForRole, role })
+    } else {
+      // One line per ingredient for non-carb roles
+      for (const id of idsForRole) {
+        displayIngredientLines.push({ ids: [id], role })
+      }
+    }
+  }
+
   return {
     id: template.id,
     name: template.name,
@@ -69,6 +91,7 @@ function toDisplayMeal(suggestion: ScoredSuggestion): DisplayMeal {
     missingIngredientIds: detail.missingIngredientIds,
     confidenceTier: detail.confidenceTier,
     substitutionMatches,
+    displayIngredientLines,
   }
 }
 

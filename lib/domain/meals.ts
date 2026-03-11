@@ -31,6 +31,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['spinach', 'broccoli'],
       finisher: ['lime-juice', 'chilli-crisp'],
     },
+    anchorIngredientIds: ['noodle-pouches', 'peanut-butter'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -62,6 +63,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['spinach'],
       finisher: ['sesame-oil', 'spring-onions'],
     },
+    anchorIngredientIds: ['noodle-pouches', 'miso-paste'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -91,6 +93,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['stock-cubes', 'garlic-granules'],
       finisher: ['sesame-oil'],
     },
+    anchorIngredientIds: ['noodle-pouches', 'stock-cubes'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -119,6 +122,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['spinach', 'broccoli'],
       finisher: ['lime-juice'],
     },
+    anchorIngredientIds: ['rice-pouches', 'peanut-butter'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -150,6 +154,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['spinach'],
       finisher: ['yoghurt'],
     },
+    anchorIngredientIds: ['rice-pouches', 'curry-paste', 'lentils'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -181,6 +186,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['soy-sauce'],
       finisher: ['sesame-oil'],
     },
+    anchorIngredientIds: ['rice-pouches', 'eggs'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -210,6 +216,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['soy-sauce'],
       finisher: ['sesame-oil'],
     },
+    anchorIngredientIds: ['noodle-pouches', 'tofu'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -240,6 +247,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       protein: ['cheddar-cheese'],
       flavour: ['garlic-granules'],
     },
+    anchorIngredientIds: ['pasta', 'cheddar-cheese'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -267,6 +275,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['garlic-granules'],
       finisher: ['lemon-juice', 'cheddar-cheese'],
     },
+    anchorIngredientIds: ['pasta'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -295,6 +304,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['pesto'],
       protein: ['cheddar-cheese'],
     },
+    anchorIngredientIds: ['pasta', 'pesto'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -320,6 +330,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       protein: ['beans'],
       flavour: ['stock-cubes'],
     },
+    anchorIngredientIds: ['bread', 'beans'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -346,6 +357,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       protein: ['eggs'],
       finisher: ['cheddar-cheese'],
     },
+    anchorIngredientIds: ['bread', 'eggs'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -373,6 +385,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['cucumber'],
       finisher: ['yoghurt'],
     },
+    anchorIngredientIds: ['pitta', 'halloumi'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -402,6 +415,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       protein: ['eggs'],
       finisher: ['feta'],
     },
+    anchorIngredientIds: ['bread', 'avocado'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'veg', required: true, min: 1 },
@@ -430,6 +444,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       protein: ['cheddar-cheese'],
       finisher: ['yoghurt'],
     },
+    anchorIngredientIds: ['potatoes', 'cheddar-cheese'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -458,6 +473,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       veg: ['carrot'],
       finisher: ['lemon-juice'],
     },
+    anchorIngredientIds: ['lentils', 'stock-cubes'],
     roleRequirements: [
       { role: 'protein', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -487,6 +503,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['garlic-granules', 'ginger'],
       finisher: ['soy-sauce'],
     },
+    anchorIngredientIds: ['noodle-pouches', 'garlic-granules', 'ginger'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'flavour', required: true, min: 1 },
@@ -515,6 +532,7 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       flavour: ['harissa'],
       finisher: ['yoghurt'],
     },
+    anchorIngredientIds: ['rice-pouches', 'chickpeas', 'harissa'],
     roleRequirements: [
       { role: 'carb', required: true, min: 1 },
       { role: 'protein', required: true, min: 1 },
@@ -527,6 +545,310 @@ export const MEAL_TEMPLATES: MealTemplate[] = [
       'Add chickpeas and cook until coated and hot.',
       'Stir in spinach until just wilted.',
       'Serve over hot rice pouches and top with a spoonful of yoghurt.',
+    ],
+  },
+
+  // 19. Avocado egg bowl
+  {
+    id: 'avocado-egg-bowl',
+    name: 'Avocado egg bowl',
+    archetype: 'rice-bowl',
+    energyLevel: 'low-effort',
+    minutes: 12,
+    steps: 4,
+    tags: ['one-bowl', 'avocado'],
+    ingredientsByRole: {
+      carb: ['rice-pouches', 'potatoes'],
+      protein: ['eggs'],
+      veg: ['avocado'],
+      finisher: ['feta', 'sesame-oil', 'spring-onions'],
+    },
+    anchorIngredientIds: ['avocado', 'eggs'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'veg', required: true, min: 1 },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Cook rice pouches or small potato cubes until hot and tender.',
+      'Cook an egg to your liking.',
+      'Slice or cube avocado.',
+      'Assemble in a bowl with the carb base, egg, and avocado, then top with feta, a drizzle of sesame oil, and spring onions if you have them.',
+    ],
+  },
+
+  // 20. Avocado feta bowl
+  {
+    id: 'avocado-feta-bowl',
+    name: 'Avocado feta bowl',
+    archetype: 'rice-bowl',
+    energyLevel: 'low-effort',
+    minutes: 12,
+    steps: 4,
+    tags: ['one-bowl', 'avocado'],
+    ingredientsByRole: {
+      carb: ['rice-pouches', 'pitta'],
+      protein: ['chickpeas', 'beans'],
+      veg: ['avocado'],
+      finisher: ['feta', 'lemon-juice'],
+    },
+    anchorIngredientIds: ['avocado'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'veg', required: true, min: 1 },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Heat rice pouches or warm pitta as your base.',
+      'Warm chickpeas or beans in a pan until hot.',
+      'Slice or cube avocado.',
+      'Serve the warm pulses over the base with avocado, crumble feta on top, and finish with a squeeze of lemon juice.',
+    ],
+  },
+
+  // 21. Avocado pitta
+  {
+    id: 'avocado-pitta',
+    name: 'Avocado pitta',
+    archetype: 'toast-plate',
+    energyLevel: 'barely-functioning',
+    minutes: 8,
+    steps: 3,
+    tags: ['toast', 'avocado'],
+    ingredientsByRole: {
+      carb: ['pitta'],
+      veg: ['avocado'],
+      protein: ['eggs'],
+      finisher: ['feta', 'lemon-juice'],
+    },
+    anchorIngredientIds: ['avocado', 'pitta'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'veg', required: true, min: 1 },
+      { role: 'protein', required: false },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Warm pitta in a toaster or dry pan.',
+      'Mash avocado onto the warm pitta.',
+      'Top with a cooked egg if you like, crumble feta over, and finish with a little lemon juice.',
+    ],
+  },
+
+  // 22. Halloumi pitta with greens
+  {
+    id: 'halloumi-pitta-greens',
+    name: 'Halloumi pitta with greens',
+    archetype: 'toast-plate',
+    energyLevel: 'low-effort',
+    minutes: 12,
+    steps: 4,
+    tags: ['handheld', 'cheesy'],
+    ingredientsByRole: {
+      carb: ['pitta'],
+      protein: ['halloumi'],
+      veg: ['spinach', 'avocado'],
+      finisher: ['lemon-juice'],
+    },
+    anchorIngredientIds: ['halloumi', 'pitta'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'veg', required: false },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Slice halloumi and fry or grill until golden on both sides.',
+      'Warm pitta bread.',
+      'Fill pitta with halloumi and a handful of spinach or sliced avocado.',
+      'Finish with a squeeze of lemon juice.',
+    ],
+  },
+
+  // 23. Chickpea pitta
+  {
+    id: 'chickpea-pitta',
+    name: 'Chickpea pitta',
+    archetype: 'toast-plate',
+    energyLevel: 'barely-functioning',
+    minutes: 10,
+    steps: 3,
+    tags: ['toast', 'chickpea'],
+    ingredientsByRole: {
+      carb: ['pitta'],
+      protein: ['chickpeas'],
+      veg: ['spinach'],
+      flavour: ['tahini', 'harissa'],
+    },
+    anchorIngredientIds: ['chickpeas', 'pitta'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'flavour', required: true, min: 1 },
+      { role: 'veg', required: false },
+    ],
+    instructions: [
+      'Warm chickpeas in a pan with a spoon of harissa until coated.',
+      'Warm pitta bread.',
+      'Spread tahini inside the pitta, stuff with the warm chickpeas and a little spinach if you have it.',
+    ],
+  },
+
+  // 24. Cheesy potato bowl (variant with extras)
+  {
+    id: 'cheesy-potato-bowl',
+    name: 'Cheesy potato bowl',
+    archetype: 'rice-bowl',
+    energyLevel: 'low-effort',
+    minutes: 15,
+    steps: 4,
+    tags: ['comfort', 'cheesy'],
+    ingredientsByRole: {
+      carb: ['potatoes'],
+      protein: ['eggs', 'beans'],
+      veg: ['broccoli', 'peas'],
+      finisher: ['cheddar-cheese'],
+    },
+    anchorIngredientIds: ['potatoes', 'cheddar-cheese'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'finisher', required: true, min: 1 },
+      { role: 'protein', required: false },
+      { role: 'veg', required: false },
+    ],
+    instructions: [
+      'Cook diced potatoes until tender (boil, microwave, or roast).',
+      'Add any quick veg like peas or small broccoli florets for the last few minutes.',
+      'Tip into a bowl and top with grated cheddar so it melts.',
+      'Add a fried egg or some beans if you want extra protein.',
+    ],
+  },
+
+  // 25. Yoghurt chickpea bowl
+  {
+    id: 'yoghurt-chickpea-bowl',
+    name: 'Yoghurt chickpea bowl',
+    archetype: 'rice-bowl',
+    energyLevel: 'low-effort',
+    minutes: 12,
+    steps: 4,
+    tags: ['one-bowl', 'chickpea'],
+    ingredientsByRole: {
+      carb: ['rice-pouches', 'pitta'],
+      protein: ['chickpeas'],
+      veg: ['spinach'],
+      flavour: ['harissa'],
+      finisher: ['yoghourt', 'lemon-juice'],
+    },
+    anchorIngredientIds: ['chickpeas', 'yoghurt'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'flavour', required: true, min: 1 },
+      { role: 'finisher', required: true, min: 1 },
+      { role: 'veg', required: false },
+    ],
+    instructions: [
+      'Heat a spoon of harissa in a pan with a splash of oil or water.',
+      'Add chickpeas and cook until coated and hot, then stir in spinach to wilt.',
+      'Serve over hot rice pouches or with warm pitta.',
+      'Top with a spoonful of yoghurt and a squeeze of lemon juice.',
+    ],
+  },
+
+  // 26. Ginger stock noodles
+  {
+    id: 'ginger-stock-noodles',
+    name: 'Ginger stock noodles',
+    archetype: 'soup',
+    energyLevel: 'barely-functioning',
+    minutes: 8,
+    steps: 3,
+    tags: ['soup', 'brothy'],
+    ingredientsByRole: {
+      carb: ['noodle-pouches'],
+      flavour: ['stock-cubes', 'ginger'],
+      protein: ['tofu'],
+      veg: ['spinach', 'peas'],
+      finisher: ['sesame-oil'],
+    },
+    anchorIngredientIds: ['stock-cubes', 'ginger'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'flavour', required: true, min: 1 },
+      { role: 'protein', required: false },
+      { role: 'veg', required: false },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Dissolve a stock cube and grated or minced ginger in boiling water to make a quick broth.',
+      'Add noodle pouches, tofu, and any quick veg like spinach or peas and cook until hot.',
+      'Serve in a bowl and finish with a drizzle of sesame oil.',
+    ],
+  },
+
+  // 27. Garlic sesame noodles
+  {
+    id: 'garlic-sesame-noodles',
+    name: 'Garlic sesame noodles',
+    archetype: 'noodle-bowl',
+    energyLevel: 'barely-functioning',
+    minutes: 8,
+    steps: 3,
+    tags: ['one-bowl'],
+    ingredientsByRole: {
+      carb: ['noodle-pouches'],
+      flavour: ['garlic-granules'],
+      protein: ['tofu'],
+      veg: ['broccoli', 'spinach'],
+      finisher: ['sesame-oil'],
+    },
+    anchorIngredientIds: ['garlic-granules', 'sesame-oil'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'flavour', required: true, min: 1 },
+      { role: 'protein', required: false },
+      { role: 'veg', required: false },
+      { role: 'finisher', required: false },
+    ],
+    instructions: [
+      'Cook noodle pouches according to the packet.',
+      'Toss hot noodles with a little oil, garlic granules, and sesame oil.',
+      'Add tofu and quick veg like small broccoli florets or spinach if you have them.',
+    ],
+  },
+
+  // 28. Warm lentil bowl
+  {
+    id: 'warm-lentil-bowl',
+    name: 'Warm lentil bowl',
+    archetype: 'rice-bowl',
+    energyLevel: 'low-effort',
+    minutes: 15,
+    steps: 4,
+    tags: ['one-bowl', 'lentil'],
+    ingredientsByRole: {
+      carb: ['rice-pouches', 'potatoes'],
+      protein: ['lentils'],
+      veg: ['spinach', 'broccoli'],
+      flavour: ['curry-paste'],
+      finisher: ['yoghurt'],
+    },
+    anchorIngredientIds: ['lentils'],
+    roleRequirements: [
+      { role: 'carb', required: true, min: 1 },
+      { role: 'protein', required: true, min: 1 },
+      { role: 'flavour', required: true, min: 1 },
+      { role: 'finisher', required: false },
+      { role: 'veg', required: false },
+    ],
+    instructions: [
+      'Heat a spoon of curry paste in a pan with a splash of water.',
+      'Add lentils and cook until hot, then stir in spinach or small broccoli florets.',
+      'Serve over hot rice pouches or cooked potatoes.',
+      'Top with a spoonful of yoghurt.',
     ],
   },
 ]

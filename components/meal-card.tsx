@@ -13,6 +13,10 @@ type MealWithAvailability = Meal & {
     requiredIngredientId: string
     substituteIngredientId: string
   }[]
+  displayIngredientLines?: {
+    ids: string[]
+    role?: string
+  }[]
 }
 
 interface MealCardProps {
@@ -85,38 +89,58 @@ export function MealCard({ meal, selectedIngredients, energyLevel = 'low-effort'
               Ingredients
             </h4>
             <ul className="space-y-1">
-              {meal.ingredients.map((ing) => {
-                const hasIngredient = availableSet.has(ing)
-                const substituteId = substitutionMap.get(ing)
+              {(meal.displayIngredientLines ??
+                meal.ingredients.map((id) => ({ ids: [id] }))).map(
+                (line, index) => {
+                  const ids = line.ids
+                  const hasDirect = ids.some((id) => availableSet.has(id))
+                  const substituteIdForLine =
+                    ids.length === 1 ? substitutionMap.get(ids[0]) : undefined
 
-                const iconChar = hasIngredient ? '✓' : substituteId ? '↺' : '○'
-                const iconClasses = hasIngredient
-                  ? 'border-foreground bg-foreground text-card'
-                  : substituteId
-                    ? 'border-foreground text-foreground'
-                    : 'border-muted-foreground text-muted-foreground'
+                  const iconChar = hasDirect
+                    ? '✓'
+                    : substituteIdForLine
+                      ? '↺'
+                      : '○'
 
-                return (
-                  <li
-                    key={ing}
-                    className="flex items-center gap-2 text-sm text-foreground"
-                  >
-                    <span
-                      className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[10px] ${iconClasses}`}
+                  const iconClasses = hasDirect
+                    ? 'border-foreground bg-foreground text-card'
+                    : substituteIdForLine
+                      ? 'border-foreground text-foreground'
+                      : 'border-muted-foreground text-muted-foreground'
+
+                  const names = ids.map((id) => getIngredientName(id))
+                  const label =
+                    names.length === 1
+                      ? names[0]
+                      : names.length === 2
+                        ? `${names[0]} or ${names[1]}`
+                        : `${names.slice(0, -1).join(', ')} or ${
+                            names[names.length - 1]
+                          }`
+
+                  return (
+                    <li
+                      key={`${label}-${index}`}
+                      className="flex items-center gap-2 text-sm text-foreground"
                     >
-                      {iconChar}
-                    </span>
-                    <div className="flex flex-col">
-                      <span>{getIngredientName(ing)}</span>
-                      {substituteId && (
-                        <span className="text-[11px] text-muted-foreground">
-                          using {getIngredientName(substituteId)}
-                        </span>
-                      )}
-                    </div>
-                  </li>
-                )
-              })}
+                      <span
+                        className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[10px] ${iconClasses}`}
+                      >
+                        {iconChar}
+                      </span>
+                      <div className="flex flex-col">
+                        <span>{label}</span>
+                        {substituteIdForLine && (
+                          <span className="text-[11px] text-muted-foreground">
+                            using {getIngredientName(substituteIdForLine)}
+                          </span>
+                        )}
+                      </div>
+                    </li>
+                  )
+                },
+              )}
             </ul>
           </div>
 

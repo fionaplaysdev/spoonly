@@ -44,6 +44,7 @@ export interface MealTemplate {
   ingredientsByRole: Partial<Record<IngredientRole, string[]>>
   roleRequirements: IngredientRoleRequirement[]
   instructions: string[]
+  anchorIngredientIds?: string[]
 }
 
 export interface SuggestedReplacement {
@@ -61,6 +62,7 @@ export interface TemplateMatchDetail {
   pantryMatchIds: string[]
   missingCoreIngredientIds: string[]
   missingOptionalIngredientIds: string[]
+  missingAnchorIngredientIds: string[]
   confidenceTier: 'make-now' | 'almost-there' | 'invalid'
   suggestedReplacements: SuggestedReplacement[]
 }
