@@ -351,6 +351,9 @@ export interface PantrySectionMeta {
   name: string
   description: string
   ingredientIds: string[]
+  tip?: {
+    text: string
+  }
 }
 
 export const PANTRY_SECTIONS: PantrySectionMeta[] = [
@@ -361,6 +364,9 @@ export const PANTRY_SECTIONS: PantrySectionMeta[] = [
     ingredientIds: INGREDIENTS.filter(
       (ingredient) => ingredient.section === 'flavour-engine',
     ).map((ingredient) => ingredient.id),
+    tip: {
+      text: 'Freeze ginger whole and grate from frozen, freeze tomato paste in teaspoon blobs, and freeze leftover coconut milk in cubes.',
+    },
   },
   {
     id: 'protein',
@@ -385,6 +391,9 @@ export const PANTRY_SECTIONS: PantrySectionMeta[] = [
     ingredientIds: INGREDIENTS.filter(
       (ingredient) => ingredient.section === 'veg',
     ).map((ingredient) => ingredient.id),
+    tip: {
+      text: 'Frozen veg is low effort, lasts forever, and still counts as real vegetables.',
+    },
   },
   {
     id: 'finisher',
@@ -393,6 +402,9 @@ export const PANTRY_SECTIONS: PantrySectionMeta[] = [
     ingredientIds: INGREDIENTS.filter(
       (ingredient) => ingredient.section === 'finisher',
     ).map((ingredient) => ingredient.id),
+    tip: {
+      text: 'Freeze chopped spring onions for quick garnish, and keep lemons in the freezer — they grate beautifully.',
+    },
   },
 ]
 
