@@ -15,7 +15,7 @@ import {
   getSuggestionsForIngredients,
   groupSuggestionsByEnergy,
 } from '@/lib/domain/suggestions'
-import type { EnergyLevel, MealTemplate } from '@/lib/domain/types'
+import type { EnergyLevel, ScoredSuggestion } from '@/lib/domain/types'
 
 type DisplayMeal = {
   id: string
@@ -27,12 +27,33 @@ type DisplayMeal = {
   ingredients: string[]
   instructions: string[]
   energyLevel: EnergyLevel
+  availableIngredientIds: string[]
+  missingIngredientIds: string[]
+  confidenceTier?: 'make-now' | 'almost-there' | 'invalid'
+  substitutionMatches?: {
+    requiredIngredientId: string
+    substituteIngredientId: string
+  }[]
 }
 
-function toDisplayMeal(template: MealTemplate): DisplayMeal {
+function toDisplayMeal(suggestion: ScoredSuggestion): DisplayMeal {
+  const { template, detail } = suggestion
+
   const flatIngredients = Object.values(template.ingredientsByRole)
     .filter((ids): ids is string[] => Array.isArray(ids))
     .flat()
+
+  const substitutionMatches =
+    detail.suggestedReplacements?.flatMap((rep) =>
+      (rep.replacementIds ?? []).length > 0
+        ? [
+            {
+              requiredIngredientId: rep.missingId,
+              substituteIngredientId: rep.replacementIds[0],
+            },
+          ]
+        : [],
+    ) ?? []
 
   return {
     id: template.id,
@@ -44,6 +65,10 @@ function toDisplayMeal(template: MealTemplate): DisplayMeal {
     ingredients: flatIngredients,
     instructions: template.instructions,
     energyLevel: template.energyLevel,
+    availableIngredientIds: detail.matchedIngredientIds,
+    missingIngredientIds: detail.missingIngredientIds,
+    confidenceTier: detail.confidenceTier,
+    substitutionMatches,
   }
 }
 
@@ -123,11 +148,11 @@ function SuggestionsContent() {
 
     return {
       'barely-functioning': grouped['barely-functioning'].map((s) =>
-        toDisplayMeal(s.template),
+        toDisplayMeal(s),
       ),
-      'low-effort': grouped['low-effort'].map((s) => toDisplayMeal(s.template)),
+      'low-effort': grouped['low-effort'].map((s) => toDisplayMeal(s)),
       'some-energy': grouped['some-energy'].map((s) =>
-        toDisplayMeal(s.template),
+        toDisplayMeal(s),
       ),
     }
   }, [suggestions])

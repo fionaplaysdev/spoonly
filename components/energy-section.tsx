@@ -5,9 +5,19 @@ import { MealCard } from './meal-card'
 import type { Meal } from '@/lib/types'
 import { Zap, Flame } from 'lucide-react'
 
+type MealWithAvailability = Meal & {
+  availableIngredientIds?: string[]
+  missingIngredientIds?: string[]
+  confidenceTier?: 'make-now' | 'almost-there' | 'invalid'
+  substitutionMatches?: {
+    requiredIngredientId: string
+    substituteIngredientId: string
+  }[]
+}
+
 interface EnergySectionProps {
   level: 'barely-functioning' | 'low-effort' | 'some-energy'
-  meals: Meal[]
+  meals: MealWithAvailability[]
   selectedIngredients: string[]
 }
 

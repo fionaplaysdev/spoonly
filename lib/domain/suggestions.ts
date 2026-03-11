@@ -5,9 +5,11 @@ import type {
   MealTemplate,
   TemplateMatchDetail,
   ScoredSuggestion,
+  SuggestedReplacement,
 } from './types'
 
 import { MEAL_TEMPLATES } from './meals'
+import { SUBSTITUTIONS } from './substitutions'
 
 // Weighting constants to keep scoring deterministic and readable
 const SELECTED_MATCH_WEIGHT = 10
@@ -40,35 +42,58 @@ export function matchTemplateToIngredients(
     .filter((ids): ids is string[] => Array.isArray(ids))
     .flat()
 
+  const finisherIds = template.ingredientsByRole.finisher ?? []
+  const finisherSet = new Set(finisherIds)
+
   const selectedMatchIds: string[] = []
   const pantryMatchIds: string[] = []
   const matchedIngredientIds: string[] = []
   const missingIngredientIds: string[] = []
+  const suggestedReplacements: SuggestedReplacement[] = []
 
   for (const id of allTemplateIngredientIds) {
-    if (availableSet.has(id)) {
+    const substitutions = SUBSTITUTIONS[id] ?? []
+    const hasDirect = availableSet.has(id)
+    const replacementIds = substitutions.filter((subId) => availableSet.has(subId))
+    const hasSubstitute = replacementIds.length > 0
+
+    if (hasDirect) {
       matchedIngredientIds.push(id)
       if (selectedSet.has(id)) {
         selectedMatchIds.push(id)
       } else if (pantrySet.has(id)) {
         pantryMatchIds.push(id)
       }
+    } else if (hasSubstitute) {
+      // Required roles can be satisfied via substitutes; record for messaging.
+      suggestedReplacements.push({ missingId: id, replacementIds })
     } else {
       missingIngredientIds.push(id)
     }
   }
 
+  const missingCoreIngredientIds = missingIngredientIds.filter(
+    (id) => !finisherSet.has(id),
+  )
+  const missingOptionalIngredientIds = missingIngredientIds.filter((id) =>
+    finisherSet.has(id),
+  )
+
   const matchedRoles = new Set<IngredientRole>()
   const missingRequiredRoles = new Set<IngredientRole>()
 
   for (const requirement of template.roleRequirements) {
-    const roleIngredients = allIngredients.filter((ingredient) =>
-      ingredient.roles.includes(requirement.role),
-    )
+    const templateRoleIds = template.ingredientsByRole[requirement.role] ?? []
+    let availableForRole = 0
 
-    const availableForRole = roleIngredients.filter((ingredient) =>
-      availableSet.has(ingredient.id),
-    )
+    for (const id of templateRoleIds) {
+      const substitutions = SUBSTITUTIONS[id] ?? []
+      const hasDirect = availableSet.has(id)
+      const hasSubstitute = substitutions.some((subId) => availableSet.has(subId))
+      if (hasDirect || hasSubstitute) {
+        availableForRole++
+      }
+    }
 
     if (
       requirement.required &&
@@ -80,6 +105,19 @@ export function matchTemplateToIngredients(
     }
   }
 
+  // Classify confidence based purely on required roles:
+  // - invalid: any required role is missing
+  // - make-now: all required roles satisfied and no ingredients missing
+  // - almost-there: all required roles satisfied but some (optional) ingredients missing
+  let confidenceTier: 'make-now' | 'almost-there' | 'invalid'
+  if (missingRequiredRoles.size > 0) {
+    confidenceTier = 'invalid'
+  } else if (missingIngredientIds.length === 0) {
+    confidenceTier = 'make-now'
+  } else {
+    confidenceTier = 'almost-there'
+  }
+
   return {
     template,
     matchedIngredientIds,
@@ -88,11 +126,18 @@ export function matchTemplateToIngredients(
     missingRequiredRoles: Array.from(missingRequiredRoles),
     selectedMatchIds,
     pantryMatchIds,
+    missingCoreIngredientIds,
+    missingOptionalIngredientIds,
+    confidenceTier,
+    suggestedReplacements,
   }
 }
 
 export function scoreMatch(detail: TemplateMatchDetail): number {
-  if (detail.missingRequiredRoles.length > 0) {
+  if (
+    detail.missingRequiredRoles.length > 0 ||
+    detail.confidenceTier === 'invalid'
+  ) {
     return Number.NEGATIVE_INFINITY
   }
 
@@ -182,6 +227,25 @@ export function getSuggestionsForIngredients({
   })
 
   return suggestions
+}
+
+export interface TieredSuggestions {
+  makeNow: ScoredSuggestion[]
+  almostThere: ScoredSuggestion[]
+}
+
+export function getTieredSuggestionsForIngredients(
+  params: SuggestionParams,
+): TieredSuggestions {
+  const flat = getSuggestionsForIngredients(params)
+  return {
+    makeNow: flat.filter(
+      (s) => s.detail.confidenceTier === 'make-now',
+    ),
+    almostThere: flat.filter(
+      (s) => s.detail.confidenceTier === 'almost-there',
+    ),
+  }
 }
 
 export function groupSuggestionsByEnergy(

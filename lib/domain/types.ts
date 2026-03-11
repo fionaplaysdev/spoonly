@@ -46,6 +46,11 @@ export interface MealTemplate {
   instructions: string[]
 }
 
+export interface SuggestedReplacement {
+  missingId: string
+  replacementIds: string[]
+}
+
 export interface TemplateMatchDetail {
   template: MealTemplate
   matchedIngredientIds: string[]
@@ -54,6 +59,10 @@ export interface TemplateMatchDetail {
   missingRequiredRoles: IngredientRole[]
   selectedMatchIds: string[]
   pantryMatchIds: string[]
+  missingCoreIngredientIds: string[]
+  missingOptionalIngredientIds: string[]
+  confidenceTier: 'make-now' | 'almost-there' | 'invalid'
+  suggestedReplacements: SuggestedReplacement[]
 }
 
 export interface ScoredSuggestion {
